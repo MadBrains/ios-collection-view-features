@@ -17,7 +17,7 @@ class MainViewController: BaseViewController {
     
     // MARK: Важно выставить allowsMultipleSelection для множественного выбора
     private lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
+        let layout = JumpAvoidingFlowLayout()
         layout.scrollDirection = .vertical
         
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
