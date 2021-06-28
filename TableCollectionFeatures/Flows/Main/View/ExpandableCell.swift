@@ -62,6 +62,14 @@ class ExpandableCell: UICollectionViewCell {
         topContainer.backgroundColor = UIColor.systemYellow
         bottomContainer.backgroundColor = UIColor.systemGreen
         
+        contentView.cornerRadius = 12
+        contentView.clipsToBounds = true
+        
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowRadius = 5
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = .zero
+        
         makeConstraints()
         updateAppearance()
     }
