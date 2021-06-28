@@ -133,6 +133,28 @@ extension MainViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
         collectionView.performBatchUpdates(nil)
+        
+        // MARK: И скроллим так, чтобы при разворачивании ячейки ее было полностью видно
+        DispatchQueue.main.async {
+            guard let attributes = collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath) else {
+                return
+            }
+
+            let desiredOffset = attributes.frame.origin.y - 20
+            let contentHeight = collectionView.collectionViewLayout.collectionViewContentSize.height
+            let maxPossibleOffset = contentHeight - collectionView.bounds.height
+            let finalOffset = max(min(desiredOffset, maxPossibleOffset), 0)
+
+            collectionView.setContentOffset(
+                CGPoint(x: 0, y: finalOffset),
+                animated: true
+            )
+            
+            // MARK: Весь этот костыль можно спокойно заменить на:
+            // collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
+            // Но тогда не будет инсета в 20 пикселей сверху (для красоты)
+        }
+        
         return true
     }
     
