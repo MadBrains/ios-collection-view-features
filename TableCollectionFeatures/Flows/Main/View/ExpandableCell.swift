@@ -34,6 +34,12 @@ class ExpandableCell: UICollectionViewCell {
         return imageView
     }()
     
+//    // MARK: Работает только в случае, если нам вообще не нужна интеракция с нижним контейнером
+//    // Нажатия по нижнему контейнеру обрабатываться вообще не будут
+//    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+//        topContainer.point(inside: point, with: event)
+//    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -61,6 +67,12 @@ class ExpandableCell: UICollectionViewCell {
         mainContainer.clipsToBounds = true
         topContainer.backgroundColor = UIColor.systemYellow
         bottomContainer.backgroundColor = UIColor.systemGreen
+        
+        // MARK: Добавление гестуры на нижний контейнер позволяет любое нажатие перенаправлять на нее
+        // В отличие от переопределения pointInside, этот вариант не запрещает интеракцию в контейнере
+        // Любая кнопка, находящаяся в этом контейнере, сработает, т.к. фактически лежит над гестурой
+        let tapGesture = UITapGestureRecognizer()
+        bottomContainer.addGestureRecognizer(tapGesture)
         
         contentView.cornerRadius = 12
         contentView.clipsToBounds = true
