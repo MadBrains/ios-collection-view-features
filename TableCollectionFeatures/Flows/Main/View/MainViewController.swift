@@ -13,6 +13,8 @@ import SwifterSwift
 
 class MainViewController: BaseViewController {
     
+    private let sizingCell = ExpandableCell()
+    
     // MARK: Важно выставить allowsMultipleSelection для множественного выбора
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -74,14 +76,30 @@ extension MainViewController: UICollectionViewDataSource {
 
 extension MainViewController: UICollectionViewDelegateFlowLayout {
     
-    // MARK: Фиксированная высота ячеек - 50 в свернутом и 150 в развернутом состояниях
+    // MARK: Динамический расчет высоты
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
         let isSelected = collectionView.indexPathsForSelectedItems?.contains(indexPath) ?? false
-        return CGSize(width: collectionView.bounds.width - 40, height: isSelected ? 150 : 50)
+        
+        sizingCell.frame = CGRect(
+            origin: .zero,
+            size: CGSize(width: collectionView.bounds.width - 40, height: 1000)
+        )
+        
+        sizingCell.isSelected = isSelected
+        sizingCell.setNeedsLayout()
+        sizingCell.layoutIfNeeded()
+
+        let size = sizingCell.systemLayoutSizeFitting(
+            CGSize(width: collectionView.bounds.width - 40, height: .greatestFiniteMagnitude),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .defaultLow
+        )
+
+        return size
     }
     
     func collectionView(
